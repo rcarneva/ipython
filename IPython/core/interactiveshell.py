@@ -1611,6 +1611,38 @@ class InteractiveShell(SingletonConfigurable):
         # and add any custom exception handlers the user may have specified
         self.set_custom_exc(*custom_exceptions)
 
+        ###
+
+        import time, blink1py
+        from multiprocessing import Process
+
+        def blinken(n):
+            try:
+                with blink1py.open_blink1() as b1:
+                    for _ in xrange(n):
+                        b1.fade_rgb(200,0,0,150)
+                        time.sleep(.2)
+                        b1.fade_rgb(0,0,0,150)
+                        time.sleep(.2)
+                    b1.off()
+            except:
+                pass
+
+        def thread_blink():
+            #threading.Thread(target=lambda: blinken(3)).start()
+            Process(target=lambda: blinken(3)).start()
+
+        def custom_exc(shell, etype, evalue, tb, tb_offset=None):
+            thread_blink()
+            shell.showtraceback((etype, evalue, tb), tb_offset=tb_offset)
+
+        def set_exc():
+            get_ipython().set_custom_exc((Exception,), custom_exc)
+
+        self.set_custom_exc((Exception,), custom_exc)
+
+        ###
+
         # Set the exception mode
         self.InteractiveTB.set_mode(mode=self.xmode)
 
