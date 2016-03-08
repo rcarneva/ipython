@@ -54,7 +54,7 @@ class TerminalInteractiveShell(InteractiveShell):
 
     pt_cli = None
 
-    vi_mode = Bool(False, config=True,
+    vi_mode = Bool(True, config=True,
         help="Use vi style keybindings at the prompt",
     )
 
